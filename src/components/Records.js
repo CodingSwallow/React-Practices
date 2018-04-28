@@ -26,7 +26,6 @@ class Records extends Component {
       })
     )
   }
-
   
   handleAddRecord(record) {
     this.setState({
@@ -35,6 +34,28 @@ class Records extends Component {
         record
       ]
     });
+  }
+
+  handleEditRecord(records) {
+    let oldRecords = this.state.records;
+    let newRecords = [];
+    let border;
+    oldRecords.map((item, index)=>{
+      if (item.id === records.id) {
+        border = index;
+      }
+    });
+    newRecords = oldRecords.slice(0, border);
+    newRecords.push(records);
+    newRecords = [...newRecords, ...oldRecords.slice(border+1)];
+    this.setState({records:newRecords});
+  }
+
+  handleDeleteRecord(record) {
+    const recordIndex = this.state.records.indexOf(record);
+    const newRecords = this.state.records.filter((item, index) => { return index !== recordIndex });
+    console.log(newRecords);
+    this.setState({records:newRecords});
   }
 
   render() {
@@ -49,11 +70,17 @@ class Records extends Component {
           <table className='table table-bordered'>
             <thead>
               <tr>
-                <td>Date</td><td>Title</td><td>Amounts</td>
+                <td>Date</td><td>Title</td><td>Amounts</td><td>Options</td>
               </tr>
             </thead>
             <tbody>
-              {records.map((record)=><Record key={record.id} {...record}/>)}
+              {records.map((record)=>
+                <Record 
+                  key={record.id} 
+                  record={record} 
+                  onEditRecord={this.handleEditRecord.bind(this)}
+                  onDeleteRecord={this.handleDeleteRecord.bind(this)}
+                  />)}
             </tbody>
           </table>
       );
