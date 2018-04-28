@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Record from './Record.js';
-import RecordForm from './RecordForm.js';
+import Record from './Record';
+import RecordForm from './RecordForm';
 import * as RecordsAPI from '../utils/RecordsAPI';
+import AmountBox from './AmountBox';
 
 class Records extends Component {
   constructor() {
@@ -58,6 +59,30 @@ class Records extends Component {
     this.setState({records:newRecords});
   }
 
+  credit() {
+    let credits = this.state.records.filter((record) => {
+      return record.amount >= 0;
+    })
+
+    return credits.reduce((prev, curr) => {
+      return prev + Number.parseInt(curr.amount, 0);
+    }, 0)
+  }
+
+  debit() {
+    let debits = this.state.records.filter((record) => {
+      return record.amount < 0;
+    })
+
+    return debits.reduce((prev, curr) => {
+      return prev + Number.parseInt(curr.amount, 0);
+    }, 0)
+  }
+
+  balance() {
+    return this.credit() + this.debit();
+  }
+
   render() {
     const {error, isLoaded, records} =  this.state;
     let recordsComponent;
@@ -70,7 +95,7 @@ class Records extends Component {
           <table className='table table-bordered'>
             <thead>
               <tr>
-                <td>Date</td><td>Title</td><td>Amounts</td><td>Options</td>
+                <td>Date</td><td>Title</td><td>Amounts(￥)</td><td>Options</td>
               </tr>
             </thead>
             <tbody>
@@ -88,7 +113,12 @@ class Records extends Component {
 
     return (
       <div>
-        <h1>Records</h1>
+        <h1>RECORDS</h1>
+        <div className='row mb-3'>
+          <AmountBox text='Credit' type='success' amount={this.credit()}/>
+          <AmountBox text='Debit' type='danger' amount={this.debit()}/>
+          <AmountBox text='Balance' type='info' amount={this.balance()}/>
+        </div>
         <RecordForm onAddRecord={this.handleAddRecord.bind(this)} />
         {recordsComponent}
       </div>

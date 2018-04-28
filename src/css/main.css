@@ -1,0 +1,31 @@
+body {
+    background: #f0f0f0;
+}
+.records-container {
+    background: #fff;
+    border-radius: 0.5rem;
+
+    width: 90%;
+    margin: 1rem auto;
+    padding: 1rem;
+    text-align: center;
+}
+.records-container h1 {
+    font-family: "Comic Sans MS";
+    margin: 1.5rem 0;
+}
+.card .card-header {
+    font-weight: bold;
+}
+.card .card-body {
+    color: #666;
+}
+table thead tr {
+    background: #f0f0f0;
+}
+table thead td {
+    font-weight: bold;
+}
+input {
+    font-family: "Comic Sans MS";
+}
