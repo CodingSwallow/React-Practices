@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as RecordsAPI from '../utils/RecordsAPI';
 
 export default class RecordForm extends Component {
     constructor(props) {
@@ -23,10 +24,28 @@ export default class RecordForm extends Component {
     valid() {
        return this.state.date &&  this.state.title && this.state.amount;
     }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        let data = {date:this.state.date,title:this.state.title,amount:Number.parseInt(this.state.amount, 0)};
+        RecordsAPI.create(data).then(
+            response =>  {
+                this.props.onAddRecord(response.data);
+                this.setState({
+                    date:"",
+                    title:"",
+                    amount:""
+                });
+            }
+        ).catch(
+            error => console.log(error.message)
+        );
+    }
+
     render() {
         return (
-        <form className='form-inline'>
-            <div className='form-group'>
+        <form className='form-inline mb-3' onSubmit={this.handleSubmit.bind(this)} >
+            <div className='form-group mr-1'>
                 <input 
                     type='text'
                     className='form-control' 
@@ -36,7 +55,7 @@ export default class RecordForm extends Component {
                     onChange={this.handleChange.bind(this)}
                     />
             </div> 
-            <div className='form-group'>
+            <div className='form-group mr-1'>
                 <input type='text' 
                     className='form-control'
                     placeholder='title' 
@@ -45,7 +64,7 @@ export default class RecordForm extends Component {
                     onChange={this.handleChange.bind(this)}
                     />
             </div> 
-            <div className='form-group'>
+            <div className='form-group mr-1'>
                 <input 
                     type='text' 
                     className='form-control'
